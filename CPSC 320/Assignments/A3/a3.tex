@@ -1,0 +1,225 @@
+\documentclass[11pt,fleqn]{exam}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{fancyvrb}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{algpseudocode}
+\usepackage{comment}
+\usepackage{ulem}
+\usepackage{enumitem}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{tikz}
+\usetikzlibrary{arrows,arrows.meta,positioning,intersections,shapes.gates.logic.US,calc}
+\algnewcommand\algorithmicforeach{\textbf{for each}}
+\algdef{S}[FOR]{ForEach}[1]{\algorithmicforeach\ #1\ \algorithmicdo}
+\newcommand{\fillinMCmath}[1]{\begin{tikzpicture}\draw circle [radius=0.5em];\end{tikzpicture}\ #1}
+\newcommand{\fillinMCmathsoln}[1]{\begin{tikzpicture}\draw[black, fill=blue] circle [radius=0.5em];\end{tikzpicture}\ #1}
+\newcommand{\ptsamt}[1]{[#1~points]}
+\newcommand{\ptamt}[1]{[#1~point]}
+
+%%% Adding Colour to Questions and Answers
+\usepackage{color}
+
+\definecolor{solnblue}{rgb}{0,0,1}
+\newenvironment{soln}{\color{solnblue}}{}
+
+%Questions
+
+% Answers
+\definecolor{blu}{rgb}{0,0,0.5}
+\def\blu#1{{\color{blu}#1}}
+\definecolor{gre}{rgb}{0,.3,0}
+\def\gre#1{{\color{gre}#1}}
+\definecolor{red}{rgb}{0.5,0.0,0}
+\def\red#1{{\color{red}#1}}
+\def\norm#1{\|#1\|}
+%%% End for Colours
+
+%fancyvrb commands
+\def\lar{$\leftarrow$}
+\def\lesseq{$\leq$}
+
+
+%\newif\ifsolutions\solutionstrue
+\newif\ifsolutions\solutionsfalse
+
+\makeatletter
+
+\ifsolutions
+\title{CPSC 320 2024W1: Assignment 3 Solutions}
+\else
+\title{CPSC 320 2024W1: Assignment 3}
+\fi
+\author{}
+\date{}
+\hypersetup{
+  pdfkeywords={},
+  pdfsubject={},
+  pdfcreator={Emacs Org-mode version 7.9.3f}}
+
+\begin{document}
+
+\maketitle
+\vspace{-0.5in}
+
+\ifsolutions
+\setcounter{section}{2}
+\else
+This assignment is due \textbf{Friday, October 25 at 7 PM}. Late submissions will not be accepted. All the submission and formatting rules for Assignment~1 apply to this assignment as well.  
+%------------------------------------------------------------------------------------
+\section{List of names of group members (as listed on Canvas)}
+
+Provide the list here. This is worth 1 mark. Include student numbers
+as a secondary failsafe if you wish.
+
+\section{Statement on collaboration and use of resources}
+To develop good practices in doing homeworks,
+citing resources and acknowledging input from others, please complete the following.
+This question is worth 2 marks.
+
+\begin{enumerate}
+\item All group members have read and followed the guidelines for groupwork
+on assignments given in the Syllabus).
+
+\fillinMCmath{Yes} \hspace{.5in} \fillinMCmath{No}
+
+\item We used the following resources (list books, online sources, etc. that you consulted):
+\item One or more of us consulted with course staff during office hours.
+
+\fillinMCmath{Yes} \hspace{.5in} \fillinMCmath{No}
+
+\item One or more of us collaborated with other CPSC 320 students; none of us took
+      written notes during our consultations and we took at least a half-hour break afterwards.
+
+\fillinMCmath{Yes} \hspace{.5in} \fillinMCmath{No}
+
+      If yes, please list their name(s) here:
+
+\item One or more of us collaborated with or consulted others outside of CPSC 320; none of us took written notes during our consultations and we took at least a half-hour break afterwards.
+
+\fillinMCmath{Yes} \hspace{.5in} \fillinMCmath{No}
+
+      If yes, please list their name(s) here:
+
+\end{enumerate}
+\newpage
+\fi
+
+%==========================================
+
+
+% Questions:
+% - greedy. Maybe something interval scheduling? Either the meeting problem or find something that can be proven with an exchange argument. (Can we use an exchange argument for the meeting problem?)
+\section{More Heat!}
+
+Recall the worked example we discussed in class at the beginning of the greedy algorithms unit: 
+
+You are an air conditioner mechanic, and your normally temperate coastal city is expecting record-breaking heat this summer. You have agreed to install or repair an air conditioning system for $n$ clients, and each job will take one day to complete. You must decide the order in which to complete the jobs.
+
+None of your clients want to be hot and uncomfortable in the coming heat wave, so they would all prefer to have their project completed earlier rather than later. In particular, after $n$ days the uncomfortable heat is expected to be over, so nobody is going to be especially happy with being the last client on your list. More precisely, if you complete the job for client $i$ at the end of day $j$, then client $i$'s satisfaction is $s_i = n-j$.
+
+Some clients are more important to you than others (perhaps they are paying you more, are more likely to recommend you to others, or are more likely to be repeat customers in the future). You assign each client $i$ a weight $w_i$. You want to schedule your clients across the $n$ days such that you maximize the weighed sum of satisfaction, that is, $\sum_{1 \le i \le n} w_i s_i$.
+
+We saw in the worked example that, in this scenario, an optimal greedy algorithm is to sort the jobs in order of $w_i$.
+
+\begin{questions}
+    \question[3] Instead of assuming that each job takes exactly 1 day, suppose that it takes $t_i$ days to complete the job $i$ (here $t_i$ must be greater than 0, but is not necessarily an integer). Assume that $\sum_{1 \leq i \leq n}t_i = n$. Again, you want to maximize the weighted sum of satisfaction $\sum_{1 \leq i \leq n} w_i s_i$, where $s_i = n-c_i$. and $c_i$ is the time to completion of the project. For example, if project $i$ is completed first, then $c_i = t_i$. If a project $i'$ is completed second (after project $i$), then $c_{i'} =t_i + t_{i'}$.
+	
+	Give and briefly explain a counterexample to show that the greedy strategy of completing projects in decreasing order of $w_i$ is not optimal for this variant of the problem.
+
+    \ifsolutions \input{q3a-sol.tex} \fi
+
+    \question[2] Describe a greedy strategy that is optimal on the problem variant described in part 1. A one-sentence description is sufficient (e.g., describe the order that you would use to sort the projects).
+     \ifsolutions \input{q3b-sol.tex} \fi
+
+    \question[5] Prove that your greedy strategy from part 2 is optimal.
+     \ifsolutions \input{q3c-sol.tex} \else \newpage \fi
+
+\end{questions}
+\section{Weekly Meeting Logistics}
+
+You're the manager of an animal shelter, which is run by a few full-time staff members and a group of $n$ volunteers. Each of the volunteers is scheduled to work one shift during the week. There are different jobs associated with these shifts (such as caring for the animals, interacting with visitors to the shelter, handling administrative tasks, etc.), but each shift is a single contiguous interval of time. Shifts cannot span more than one week (e.g., we cannot have a shift from 10 PM Saturday to 6 AM Sunday). There can be multiple shifts going on at once.
+
+You'd like to arrange a weekly meeting with your staff and volunteers, but you have too many volunteers to be able to find a meeting time that works for everyone. Instead, you'd like to identify a suitable subset of volunteers to instead attend the weekly meeting. You'd like for every volunteer to have a shift that overlaps (at least partially) with a volunteer who is attending the meeting. Your thinking is that you can't personally meet with every single volunteer, but you would like to at least meet with people who have been working with every volunteer (and may be able to let you know if a volunteer is disgruntled or having any difficulties with their performance, etc.). Because your volunteers are busy people, you want to accomplish this with the fewest possible volunteers.
+
+Your volunteer shifts are given as an input list $V$, and each volunteer shift $v_i$ is defined by a start and finish time $(s_i, f_i)$. Your goal is to choose a subset of volunteer shifts of minimum size, such that every shift in $V$ overlaps with at least one of the chosen shifts. A shift $v_i=(1,4)$ overlaps with the shift $v_j=(3,5)$ but not with the shift $v_k=(4,6)$. 
+
+\begin{questions}
+\question[2] Your co-worker proposes the following greedy algorithm to select volunteers for your meeting:
+\begin{quote}
+    Select the shift $v$ that overlaps with the most other shifts, discard all shifts that overlap with $v$, and recurse on the remaining shifts.
+\end{quote}
+Give and briefly explain a counterexample to prove that this greedy strategy is not optimal.
+
+\ifsolutions\input{q4a-sol.tex}\fi 
+
+\question[3] Give a greedy algorithm to solve this problem. Give an unambiguous specification of your algorithm using  a \textbf{brief, plain English description}. Do not write pseudocode or worry about implementation details yet. (You may do this in part 3 if you feel that it's necessary to achieve a particular runtime.)
+
+\ifsolutions\input{q4b-sol.tex}\fi 
+
+\question[4] Briefly justify a good asymptotic bound on the runtime of your algorithm. If you prefer to present pseudo-code to help track the runtime incurred, you may do so.
+
+\ifsolutions\input{q4e-sol.tex}\fi 
+
+\end{questions}
+
+\clearpage
+\section{Fun with Recurrences}
+
+Give an asymptotic solution (which should be a $\Theta$-bound) to each of the recurrences below. You may use whatever solution method you wish (drawing out the tree, unrolling the recurrence, proof by induction, Master Theorem, etc.), but make sure you fully justify your answer.
+	
+\begin{questions}
+
+    \question[3] $T(n) = 6T\left( \frac{n}{2} \right) + 2^n$ for $n > 1$, $T(1) = 1$.
+
+    \ifsolutions\input{q5a-sol.tex}\fi 
+
+    \question[3] $T(n) = T\left( \frac{n}{4} \right) + 2T\left( \frac{n}{16} \right) + \sqrt{n}$ for $n > 16$, $T(n) = 1$ for $n \le 16$.
+
+    \ifsolutions\input{q5b-sol.tex}\fi 
+
+    \question[4] $T(n) = mT(n-1) + 1$ for $n > 1$, $T(1) = 1$. Assume that $m$ is an integer value greater than or equal to 2.
+
+    \ifsolutions\input{q5c-sol.tex}\fi 
+
+    \question[4] $T(n) = mT(\frac{n}{4}) + n^2$ for $n \ge 4$; $T(n) = 1$ for $n < 4$. Assume that $m$ is greater than or equal to 1 (but not necessarily an integer).
+
+    \ifsolutions\input{q5d-sol.tex}\fi 
+
+\end{questions}
+
+\clearpage
+
+\section{D+C = Profit}
+You own an online sales company called DCAuctions.com that sells goods both on auction and on a fixed-price basis. You want to use historical auction data to investigate your fixed price choices.
+	
+	Over $n$ minutes, you have a good's price in each minute of the auction. You want to find the largest \textit{price-over-time stretch} in your data. That is, given an array $A$ of $n$ price points, you want to find the largest possible value of
+	$$
+	f(i,d) = d \cdot \min(A[i], A[i+1], \ldots, A[i+d-1]),
+	$$
+	where $i$ is the index of the left end of a stretch of minutes, $d$ is the duration (number of minutes) of the stretch, and the function $f$ computes the duration times the minimum price over that period. (Prices are positive, $d \ge 0$, and for all values of $i$, $f(i,0) = 0$ and $f(i,1) = A[i]$.)
+	
+	For example, the best stretch is underlined in the following price array: $[8, 2, \uline{9, 5, 6, 5}, 3, 1]$. Using 1-based indexing, the value for this optimal stretch starting at index 3 and running for 4 minutes is $f(3,4) = 4 \cdot \min(9,5,6,5) = 4 \cdot 5 = 20$.
+
+ \begin{questions}
+    \question[3] Describe a polynomial-time brute force algorithm to solve this problem.
+
+    \ifsolutions\input{q6a-sol.tex}\fi 
+
+    \question[3] Write a function \texttt{MidHelper} (consider the name to be a hint for the next question!) that, given an array $A$, an index $1 \le i \le n-1$ and length $k \le n$, finds the best stretch of length less than or equal to $k$ that includes both $A[i]$ and $A[i+1]$. (Another hint for the next question: you will want to do this in $O(k)$ time.)
+
+    \ifsolutions\input{q6b-sol.tex}\fi
+
+     \question[5] Write a divide and conquer algorithm algorithm to efficiently find the best price stretch. Your algorithm should use the \texttt{MidHelper} function described in part 2.
+
+     \ifsolutions\input{q6c-sol.tex}\fi 
+
+     \question[2] Give and briefly justify a good asymptotic bound on the runtime of your algorithm.
+
+     \ifsolutions\input{q6d-sol.tex}\fi 
+     
+ \end{questions}
+
+\end{document}

@@ -1,0 +1,415 @@
+\documentclass[11pt,fleqn]{exam}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{fancyvrb}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{algpseudocode}
+\usepackage{comment}
+\usepackage{enumitem}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{tikz}
+\usetikzlibrary{arrows,arrows.meta,positioning,intersections,shapes.gates.logic.US,calc}
+\algnewcommand\algorithmicforeach{\textbf{for each}}
+\algdef{S}[FOR]{ForEach}[1]{\algorithmicforeach\ #1\ \algorithmicdo}
+\newcommand{\fillinMCmath}[1]{\begin{tikzpicture}\draw circle [radius=0.5em];\end{tikzpicture}\ #1}
+\newcommand{\fillinMCmathsoln}[1]{\begin{tikzpicture}\draw[black, fill=blue] circle [radius=0.5em];\end{tikzpicture}\ #1}
+\newcommand{\ptsamt}[1]{[#1~points]}
+\newcommand{\ptamt}[1]{[#1~point]}
+
+%%% Adding Colour to Questions and Answers
+\usepackage{color}
+
+\definecolor{solnblue}{rgb}{0,0,1}
+\newenvironment{soln}{\color{solnblue}}{}
+
+%Questions
+
+% Answers
+\definecolor{blu}{rgb}{0,0,0.5}
+\def\blu#1{{\color{blu}#1}}
+\definecolor{gre}{rgb}{0,.3,0}
+\def\gre#1{{\color{gre}#1}}
+\definecolor{red}{rgb}{0.5,0.0,0}
+\def\red#1{{\color{red}#1}}
+\def\norm#1{\|#1\|}
+%%% End for Colours
+
+%fancyvrb commands
+\def\lar{$\leftarrow$}
+\def\lesseq{$\leq$}
+
+
+\makeatletter
+
+\title{CPSC 320 2024W1: Assignment 2}
+
+\author{}
+\date{}
+\hypersetup{
+  pdfkeywords={},
+  pdfsubject={},
+  pdfcreator={Emacs Org-mode version 7.9.3f}}
+
+\begin{document}
+
+\maketitle
+\vspace{-0.5in}
+
+This assignment is due \textbf{Friday, October 4 at 7 PM}. Late submissions will not be accepted. All the submission and formatting rules for Assignment~1 apply to this assignment as well.  
+%------------------------------------------------------------------------------------
+\section{List of names of group members (as listed on Canvas)}
+
+Provide the list here. This is worth 1 mark. Include student numbers
+as a secondary failsafe if you wish.
+
+\section{Statement on collaboration and use of resources}
+To develop good practices in doing homeworks,
+citing resources and acknowledging input from others, please complete the following.
+This question is worth 2 marks.
+
+\begin{enumerate}
+\item All group members have read and followed the guidelines for groupwork
+on assignments given in the Syllabus).
+
+\fillinMCmath{Yes} \hspace{.5in} \fillinMCmath{No}
+
+\item We used the following resources (list books, online sources, etc. that you consulted):
+\item One or more of us consulted with course staff during office hours.
+
+\fillinMCmath{Yes} \hspace{.5in} \fillinMCmath{No}
+
+\item One or more of us collaborated with other CPSC 320 students; none of us took
+      written notes during our consultations and we took at least a half-hour break afterwards.
+
+\fillinMCmath{Yes} \hspace{.5in} \fillinMCmath{No}
+
+      If yes, please list their name(s) here:
+
+\item One or more of us collaborated with or consulted others outside of CPSC 320; none of us took written notes during our consultations and we took at least a half-hour break afterwards.
+
+\fillinMCmath{Yes} \hspace{.5in} \fillinMCmath{No}
+
+      If yes, please list their name(s) here:
+
+\end{enumerate}
+\newpage
+
+%==========================================
+
+\section{Logarithmic functions grow more slowly than "polynomial" functions}
+
+The textbook (2.8, page 41) provides the following useful fact, stating roughly that logarithmic functions are big-$O$-upper-bounded by
+simple "polynomial" functions, specifically functions that are $n$ to some constant power:
+
+\begin{quote}
+{\bf Fact:} \emph{For every $b > 1$ and every $x > 0$, we have $\log_b n = O(n^x)$.}
+\end{quote}
+
+\begin{questions}
+\question[4]
+Use the fact above to prove the stronger assertion that logarithmic functions of $n$ grow strictly more slowly, in the little-$o$ sense, than
+functions that are $n$ to some constant power:
+\begin{quote}
+\emph{For every $b > 1$ and every $x > 0$, we have $\log_b n = o(n^x)$.}
+\end{quote}
+
+If you want, you can start your proof as follows:
+
+\begin{soln}
+Fix $b>0$ and $x>0$. Using the fact, and since $x/2>0$, it must be the case that $\log_b n = O(n^{x/2})$.
+\end{soln}
+
+\question[4]
+Now use the fact of part 1 to show that $\sqrt{n} = o(n/\log^3 n)$. Here the log is to the base 10, and $\log^3 n = (\log n)^3$.
+
+\end{questions}
+
+\clearpage
+
+%===============================================================
+\section{Counting Shortest Paths}
+
+Let $G=(V,E)$ be an undirected, unweighted, connected graph with node set $\{1,2,\ldots,n\}$, where $n\ge 1$. For any node $v$, let $c(1,v)$ be the total number of shortest paths (i.e., paths with the minimum number of edges) from $1$ to $v$.
+
+\vspace{.1in}
+
+\noindent {\bf Example:} The following graph has one shortest path from 1 to 6. Also there are three shortest paths from 1 to 8. Two of these,
+namely path 1,2,3,8, and path 1,6,3,8, go through node 3, while one, namely path 1,6,5,8 goes through node 5.
+
+\vspace{.1in}
+
+\hspace{.5in} \includegraphics[width=0.3\textwidth]{a2-graph1.pdf}
+
+\vspace{.1in}
+
+\begin{questions}
+\question[2]
+Draw a breadth first search tree rooted at 1 for the graph above. Include all dashed edges as well as tree edges. (A scanned hand-drawn figure is fine as long as it is clear.)
+
+\question[2]
+How many shortest paths are there from node 1 to node 7? That is, what is the value of $c(1,7)$? Give a list of the paths.
+
+\question[4]
+\label{counting-alg}
+Here is an inductive definition for $c(1,v)$: The base case is when $v=1$, in which case we define $c(1,1)$ to be 1, since there is exactly one shortest path from $1$ to itself (with no edges). When $v > 1$, let $d[v]$ be the depth of any node $v$ in the bfs tree of $G$ rooted at 1. Then
+\[
+c(1,v) = \sum_{\begin{array}{l}u \;|\; (u,v) \in E, \mbox{ and} \\ d[u] = d[v] - 1\end{array}} c(1,u).
+\]
+Intuitively, on the right hand side we are summing up the number of shortest paths from node 1 to all nodes $u$ at level $d[v]-1$, such that there is an edge of $G$ (either a tree edge or a dashed edge) from $u$ to $v$. In our example above, $c(1,8) = c(1,3) + c(1,5)$.
+
+Provide code in the spaces indicated below, that leverages this inductive definition to obtain an algorithm that computes $c(1,v)$ for all nodes $v$. This code first initializes $c(1,v)$ for all $v$, and then calls a modified version of breadth first search that you will flesh out.
+
+\clearpage
+
+\begin{algorithmic}
+ \Procedure{Count-Shortest-Paths}{$G$.1}
+    \State $\triangleright$ $G$ is an undirected, connected graph with nodes $\{1,2,\ldots,n\}$, where $n \ge 1$
+    \State $\triangleright$ compute $c(1,v)$, the number of shortest paths, from 1 to $v$, for all nodes $v$
+     \State $\triangleright$ {\bf add code here to initialize $c(1,v)$ for all $v \in V$}:
+     \State
+     \State
+     \State
+       \State call \textsc{Modified-BFS}($G$)
+\EndProcedure
+\end{algorithmic}
+
+\vspace{.1in}
+
+ \begin{algorithmic}
+\Procedure{Modified-BFS}{$G$}
+\State $\triangleright$ Assume that this procedure can access and update the variables $c(1,v)$
+\State add node $1$ as the root of the bfs tree
+\State $d[1] \gets 0$ \Comment node 1 is at level 0
+\For{all nodes $v > 1$}
+   \State $d[v] \gets \infty$ \Comment $v$ is not yet in the tree
+\EndFor
+\State $d \gets 1$
+\While{not all nodes are added to the tree}
+   \For{each node $u$ in the tree with $d[u] = d-1$}
+   \For{each $v$ adjacent to $u$}
+        \If{$d[v] == \infty$} \Comment $v$ has not yet been added to the tree
+           \State $d[v] \gets d$  \Comment put node $v$ at level $d$ of the tree (as a child of $u$)
+        \EndIf
+           \State $\triangleright$ {\bf add your code here to update $c(1,v)$}:
+           \State
+           \State
+           \State
+     \EndFor
+   \EndFor
+   \State $d \gets d+1$        
+\EndWhile
+\EndProcedure
+  \end{algorithmic}
+  
+ \end{questions}
+
+\clearpage
+
+%===============================================================
+
+\section{Provision planning}
+You run a business to provide provisions to individuals with plans
+for long-distance hikes. An individual requesting your help tells you:
+\begin{itemize}
+\item
+$d$: The distance (in km) that the individual can hike per day, where $d$ is a positive integer;
+\item
+$p$: How many days of provisions (food, water, etc.) they can carry, where $p$ is a positive integer.
+\end{itemize}
+In addition you have access to:
+\begin{itemize}
+\item
+$R[1..k]$: inter-town distances along the planned route, with $k \ge 1$. That is,
+there are $k+1$ towns along the route with town 0 being the start and
+town $k$ being the destination; and $R[i]$ is the distance (in km)
+from town $i-1$ to town $i$ for $1\le i \le k$.
+\end{itemize}
+You need to store provisions in towns along the way,
+that the hiker will pick up en route.  For this problem, you
+need only concern yourself with instances $(d,p,R[1..k])$ that have
+valid solutions. A
+{\em valid solution} is a list of towns where provisions can
+be placed, so as to ensure that the hiker will not run out of
+provisions. In a valid solution, the distance traveled between the starting town
+and the first town in the solution, or between a consecutive pair of
+towns in the solution, or between the last town in the solution and
+the destination, is $\le dp$ (where $d$ and $p$ are defined above).
+You never need to provide provisions at town 0 or town $k$ (the hiker
+has their own provisions at the start of the trip and does not need
+them once the destination is reached).  You want to find an {\em
+  optimal solution}, that is, a valid solution of minimum length.
+
+\vspace{.1in}
+\noindent
+{\bf Example}: A hiker plans to
+hike for at most 7km per day, and can carry provisions that
+last for two days, so $d=7$ and $p=2$.
+Also, $k=5$ and $R[1..5] = [8,2,2,10,5]$, so distances between towns are:
+
+\begin{center}
+\includegraphics[width=0.6\textwidth]{greedy-example1.png}
+\end{center}
+One valid solution is the list of towns 1, 3, 4:
+\begin{center}
+\includegraphics[width=0.6\textwidth]{greedy-example1b.png}
+\end{center}
+
+\begin{questions}
+\question[3]
+In the example above, the solution is not optimal. Give {\em three
+different optimal solutions}, which have only two towns in each.
+
+\clearpage
+\question[2]
+Consider the following greedy algorithm.
+
+\vspace{.1in}
+
+\begin{algorithmic}[1]
+\Procedure{Greedy-Provisions}{$d$, $p$, $R[1..k]$}
+\State $i \leftarrow 0$ \Comment 0 is the starting town
+\State $L \leftarrow$ empty list
+\While {$i < k$}
+\State
+   \Comment find the town $j \le k$ that's furthest away from town $i$, among those of distance $\le dp$
+   \State   $j \leftarrow i+1$
+   \State   $d' \leftarrow R[j]$
+      \While {($j < k$) and ($d' + R[j+1] \le dp$)}
+         \State      $j \leftarrow j+1$
+         \State      $d' \leftarrow d' + R[j]$
+         \EndWhile
+   \If {$j < k$}
+      \State $L \leftarrow L$, $j$ \Comment append $j$ to the solution $L$
+      \EndIf
+   \State $i \leftarrow j$ \Comment update $i$
+\EndWhile
+\State output the list $L$
+\EndProcedure
+\end{algorithmic}
+Explain why the output $L$ is a valid solution, i.e., one in which the hiker will
+not run out of provisions, given that instance ($d,p,R[1..k])$ is 
+guaranteed to have a valid solution.
+
+\question[3]
+Give a big-$O$ bound on the running time of the greedy algorithm as a function of $k$, the number of towns, and justify your answer. (The lines of pseudocode above are numbered so that you can refer to specific lines in your reasoning.)
+
+\clearpage
+\question[3]
+Let $L$ be the output of the greedy algorithm, and let $i_1$ be the
+first town in list $L$.  Let $L^*$ be an optimal solution for instance
+$(d,p,R[1..k])$, and let $i_1^*$ be the first town in list $L^*$.  Let
+$L'$ be the list obtained from $L^*$ by replacing $i_1^*$ by $i_1$.
+Explain why $L'$ is also an optimal solution for instance
+$(d,p,R[1..k])$.
+
+\question[3]
+Complete the following argument that uses induction on $k$ to show that the greedy algorithm
+outputs an optimal solution
+ on any instance $(r,p,R[1..k])$ with a valid solution. You need to fill in the details for 
+the base case, and parts (i) and (ii) of the inductive step. (The inductive hypothesis is done for you.)
+
+\vspace{.1in}
+
+\noindent
+{\bf Base case}: If $k = 1$ then...
+
+\noindent
+{\bf Inductive hypothesis}: Let $k\ge 1$.
+The greedy algorithm outputs an optimal solution for any instance with $k+1$ towns (assuming that the instance has a valid solution).
+
+\noindent
+{\bf Inductive step}: Show that the greedy algorithm outputs an optimal
+solution when there are $k+2$ towns along the route. (Refer back to earlier parts of this problem.)
+
+(i) There is an optimal solution that starts with $i_1$ because ...
+
+(ii) Once $i_1$ is added to the list, the remaining solution chosen by the Greedy algorithm is optimal because...
+
+\vspace{.1in}
+
+Combining (i) and (ii), we can conclude that our algorithm finds an optimal solution for instance
+$(d,p,R[1..k])$.
+\end{questions}
+
+\clearpage
+\section{Route planning}
+You want to expand your hiker support business, so that if multiple routes
+are possible from the starting to destination town, you can determine whether at least
+one of these routes is {\em feasible}.
+
+For this problem, the possible routes are represented as an undirected
+graph $G=(V,E)$, with nodes numbered 0 to $n-1$ representing towns.  
+We assume that the starting and destination towns are nodes $0$ and $n-1$, respectively.  
+There is an edge $e=(u,v)$ between any
+pair of towns $u$ and $v$ that are directly connected by a trail, and the weight $w(e)$ of such an edge is
+the distance between the towns $u$ and $v$. Let $m$ be the number of edges of the graph.  
+
+A {\em route} is a simple path (a path in
+which no node repeats) from town 0 to town $n-1$.  Given $d$ (max
+distance traveled per day) and $p$ (number of days of provisions that
+the hiker can carry), a route $0=t_0, t_1, \ldots, t_k = n-1$
+is {\em feasible} if for all edges $(t_{i-1}, t_i)$, $1 \le i \le k$, it is the case that
+$w(t_{i-1}, t_i) \le dp$. 
+(This ensures that if the hiker stocks up on provisions in any town along the route,
+the hiker won't run out of provisions before getting to the next town.)
+
+\vspace{.1in}
+
+\noindent
+{\bf Example}: Let $d=6$, $p=2$, $n=8$, and let the graph be:
+\begin{center}
+\includegraphics[width=0.6\textwidth]{planning-example.png}
+\end{center}
+In this case route $0,1,2,3,7$ is not feasible, since even if the hiker gets
+provisions in town 1, the hiker cannot make it to town 2 before running out
+of provisions. However, route $0,1,4,5,6,3,7$ is feasible.
+
+\begin{questions}
+\question[1]
+For the above example, list one more feasible route, with six towns, including the start and destination.
+(No justification needed.)
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|} \hline
+\hspace{.5in} &\hspace{.5in} &\hspace{.5in} &\hspace{.5in} &\hspace{.5in} &\hspace{.5in} \\
+0 & 1 & 4 & 5 & 6 & 7 \\
+\hspace{.5in} &\hspace{.5in} &\hspace{.5in} &\hspace{.5in} &\hspace{.5in} &\hspace{.5in} \\ \hline
+\end{tabular}
+\end{center}
+
+\question[2]
+For the above example, list {\em two} more routes with at most six towns that are {\em not} feasible.
+(No justification needed.)
+
+\begin{soln}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|} \hline
+\hspace{.5in} &\hspace{.5in} &\hspace{.5in} &\hspace{.5in} &\hspace{.5in} &\hspace{.5in} \\
+%fill in your first route here
+ &  &  &  &  &  \\
+\hspace{.5in} &\hspace{.5in} &\hspace{.5in} &\hspace{.5in} &\hspace{.5in} &\hspace{.5in} \\ \hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|} \hline
+\hspace{.5in} &\hspace{.5in} &\hspace{.5in} &\hspace{.5in} &\hspace{.5in} &\hspace{.5in} \\
+%fill in your second route here
+ &  &  &  &  &  \\
+\hspace{.5in} &\hspace{.5in} &\hspace{.5in} &\hspace{.5in} &\hspace{.5in} &\hspace{.5in} \\ \hline
+\end{tabular}
+\end{center}
+\end{soln}
+
+\question[2]
+Given $(d,p,G=(V,E), w())$ where each edge $e$ of $E$ has weight $w(e)$, explain how to 
+use breadth first search to determine, in $O(n+m)$ time, whether there is a feasible route.
+
+\question[2]
+Given $(d,p,G=(V,E), w())$ where each edge $e$ of $E$ has weight $w(e)$, 
+can we use depth first search to determine, in $O(n+m)$ time, whether there is a feasible route?
+
+\end{questions}
+\end{document}

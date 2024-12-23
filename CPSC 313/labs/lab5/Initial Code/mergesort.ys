@@ -1,0 +1,209 @@
+#
+# Calling conventions:
+#     %rdi, %rsi, %rdx, %rcx, %r8, %r9, %r10, %r11 and %rax are caller saved
+#     %rbx, %rbp, %r12, %r13, %r14 are callee saved
+#     %rsp can not be used except for its normal use as a stack pointer.
+#     argument are passed through registers %rdi, %rsi, %rdx in this order.
+#     values are returned through %rax
+
+.pos 0x100
+
+main:	irmovq bottom,  %rsp     # initialize stack
+	irmovq array, %rdi       # %rdi = pointer to first element of the array
+	xorq   %rax, %rax        # %rsi = size
+	mrmovq size(%rax), %rsi
+	irmovq $1, %rax          # %rsi = size - 1
+	subq   %rax, %rsi
+	addq   %rsi, %rsi        # %rsi = 8 * (size - 1)
+	addq   %rsi, %rsi
+	addq   %rsi, %rsi
+	addq   %rdi, %rsi        # %rsi = pointer to last element of the array.
+	call   mergesort
+	halt
+
+#
+# Mergesort
+#    %rdi: pointer to the first element of the range to sort.
+#    %rsi: pointer to the last element of the range to sort.
+#
+mergesort:
+	rrmovq %rsi, %rax  	    # is first < last ?
+	subq   %rdi, %rax
+	jle    done             # if not, done.
+
+	rrmovq %rdi, %rdx       # %rdx = mid. Note the use  of ANDQ.
+	addq   %rsi, %rdx       # Since we're doing arithmetic  with
+	irmovq $2,   %rax       # pointers, we can not rely only  on
+	divq   %rax, %rdx       # integer division to ensure  we get
+	irmovq $-8,  %rax       # a valid pointer.
+	andq   %rax, %rdx       
+
+	pushq  %rdi
+	pushq  %rsi             
+	pushq  %rdx             
+	rrmovq %rdx, %rsi       # mergesort(first, mid)
+	call   mergesort
+	popq   %rdx
+	popq   %rsi
+	popq   %rdi
+    
+	pushq  %rdi             # mergesort(mid+1, last)
+	pushq  %rsi             
+	pushq  %rdx 
+	rrmovq %rdx, %rdi
+	irmovq $8, %rax
+	addq   %rax, %rdi
+	call   mergesort
+	popq   %rdx
+	popq   %rsi
+	popq   %rdi
+
+	call   merge            # merge(first, mid, last)
+
+done:	ret
+
+#
+# Merge
+#    %rdi: pointer to the first element of the range to merge.
+#    %rsi: pointer to the last element of the range to merge.
+#    %rdx: pointer to the middle element of the range to merge.
+#
+# %rdi is i
+# %rcx is j
+# %rdx is mid
+# %rsi is last
+# %rbp is dest
+
+merge:
+	pushq  %rbp
+	pushq  %rbx
+	pushq  %rdi
+	rrmovq %rdx, %rcx
+	irmovq $8,   %rax
+	addq   %rax, %rcx
+	irmovq temp, %rbp
+    
+mergeloop1:	
+	rrmovq %rdx, %rax          # while (i <= mid && j <= last)
+	subq   %rdi, %rax
+	jl     mergeloop2
+	
+	rrmovq %rsi, %rax
+	subq   %rcx, %rax
+	jl     mergeloop2
+
+	mrmovq 0(%rdi), %rax       # %rax = A[i]
+	mrmovq 0(%rcx), %rbx   	   # %ebx = A[j]
+	subq   %rax, %rbx          # if A[i] <= A[j]
+	jl     mergecopy2
+
+	rmmovq %rax, 0(%rbp)       # copy A[i] to temp
+	irmovq $8, %rax
+	addq   %rax, %rbp
+	addq   %rax, %rdi
+	jmp    mergeloop1
+
+mergecopy2:
+	mrmovq 0(%rcx), %rbx       # %ebx = A[j] again
+	rmmovq %rbx, 0(%rbp)
+	irmovq $8, %rax
+	addq   %rax, %rbp
+	addq   %rax, %rcx
+	jmp    mergeloop1
+
+mergeloop2:
+	pushq  %rdx
+	pushq  %rsi
+	rrmovq %rdx, %rsi         # Copy A[i] ... A[mid] to temp.
+	rrmovq %rbp, %rdx
+	call   copy
+	rrmovq %rax, %rbp
+	popq   %rsi
+	popq   %rdx
+
+        pushq  %rdx               # Copy A[j] ... A[last] to temp.
+	pushq  %rsi
+	rrmovq %rcx, %rdi
+	rrmovq %rbp, %rdx
+	call   copy
+	rrmovq %rax, %rbp
+	popq   %rsi
+	popq   %rdx
+	
+	popq   %rdi
+	
+	pushq  %rdi
+	pushq  %rsi	              # Copy temp back to A[first] ... A[last]
+	subq   %rdi, %rsi
+	rrmovq %rdi, %rdx
+	irmovq temp, %rdi
+	addq   %rdi, %rsi
+	call   copy
+	popq   %rsi
+	popq   %rdi
+
+	popq   %rbx
+	popq   %rbp
+	ret
+
+#
+# Copy helper.
+#    %rdi [input]: pointer to the first element to copy.
+#    %rsi [input]: pointer to the last element to copy.
+#    %rdx [input & output]: pointer to where the elements go.
+#	
+copy:	
+	rrmovq %rsi, %rax
+	subq   %rdi, %rax
+	jge     copycontinue
+	
+	rrmovq %rdx, %rax
+	ret
+	
+copycontinue:
+	mrmovq 0(%rdi), %rax
+	rmmovq %rax, 0(%rdx)
+
+	irmovq $8, %rax
+	addq   %rax, %rdx
+	addq   %rax, %rdi
+	jmp    copy
+
+
+#
+# Array to sort
+#
+.pos 0x1000
+array:
+		.quad	0x94f0b
+	.quad	0xf4c6a
+	.quad	0xd0cc0
+	.quad	0x81095
+	.quad	0x2627a
+	.quad	0xa4b50
+	.quad	0xc95c3
+	.quad	0x99156
+	.quad	0x820f4
+	.quad	0xc45eb
+	.quad	0x8e24f
+	.quad	0xd870f
+	.quad	0xd7731
+
+#
+# Temporary array.
+#
+temp:   .quad 0,13
+
+
+#	
+# Array size.
+#	
+size:   .quad 13
+	
+#
+# Stack (32 sixty-four bit words is more than enough here).
+#
+.pos 0x3000
+top:	            .quad 0x00000000,0x20     # top of stack.
+bottom:             .quad 0x00000000          # bottom of stack.
+

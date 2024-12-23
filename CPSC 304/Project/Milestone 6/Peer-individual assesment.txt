@@ -1,0 +1,13 @@
+For Milestone 1: I helped design the ER Diagram and entities as well as their relationships 
+
+ For Milestone 2: I wrote the schemas for the entities and relationships (with help from Jessica)  and wrote insert statements.
+
+For Milestone 3: Help distribute work
+
+For Milestone 4: I Implemented 4 queries (see Milestone 3). For division, although  my name was listed, Jessica was able to finish it without me. 
+
+-------------------------------------------------------------------------------------------------------------------
+
+No, we all did our work as listed on Milestone 3 and although me and Jessica contribute heavily in milestone 2, Jeff was able to make up for it by contributing to Milestone 3 and making the GUI and display table for Milestone 4.
+
+We all did meaningful work and I am overall satisfied with the distribution of work

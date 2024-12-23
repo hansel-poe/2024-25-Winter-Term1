@@ -1,0 +1,36 @@
+#L2.4
+irmovq $0x1, %rdi #a0
+irmovq $0x2, %rsi #a1
+irmovq $0x3, %rdx #a2
+irmovq $0x4, %rcx #a3
+call func
+
+
+func:
+xorq %rax, %rax
+rrmovq %rcx, %rax #res = a3
+xorq %rdi, %rax #res = a0 ^ a3
+xorq %rdi, %rax #res = (a0 ^ a3) ^a0
+subq %rcx, %rax #res = ((a0 ^ a3) ^a0) - a3
+mulq %rdx, %rax #res = a2 * ((a0 ^ a3) ^a0) - a3)
+andq %rsi, %rax #res = (a2 * ((a0 ^ a3) ^a0) - a3)) &a1
+ret
+
+
+#L2.5
+irmovq $0x1, %rdi #a0
+irmovq $0x2, %rsi #a1
+irmovq $0x3, %rdx #a2
+call func
+
+
+func:
+xorq %rax,%rax #empty rax
+rrmovq %rdi, %rax #res = a0
+addq %rdx, %rax #res = a0 + a2
+rrmovq %rsi, %r8 #r8 = a1
+subq %rax, %r8 #r8 = a1 - (a0 + a2)
+rrmovq %r8, %rax #res = above
+addq %rdx, %rax #res = a2 + (a1 - (a0 + a2)
+xorq %rdi, %rax
+ret

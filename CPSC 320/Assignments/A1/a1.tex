@@ -1,0 +1,449 @@
+\documentclass[11pt,fleqn]{exam}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{fancyvrb}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{algpseudocode}
+\usepackage{comment}
+\usepackage{enumitem}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{tikz}
+\usetikzlibrary{arrows,arrows.meta,positioning,intersections,shapes.gates.logic.US,calc}
+\algnewcommand\algorithmicforeach{\textbf{for each}}
+\algdef{S}[FOR]{ForEach}[1]{\algorithmicforeach\ #1\ \algorithmicdo}
+\newcommand{\fillinMCmath}[1]{\begin{tikzpicture}\draw circle [radius=0.5em];\end{tikzpicture}\ #1}
+\newcommand{\fillinMCmathsoln}[1]{\begin{tikzpicture}\draw[black, fill=blue] circle [radius=0.5em];\end{tikzpicture}\ #1}
+
+%\newif\ifsolutions\solutionstrue
+\newif\ifsolutions\solutionsfalse
+
+
+%%% Adding Colour to Questions and Answers
+\usepackage{color}
+
+\definecolor{solnblue}{rgb}{0,0,1}
+\newenvironment{soln}{\color{solnblue}}{}
+
+%Questions
+
+% Answers
+\definecolor{blu}{rgb}{0,0,0.5}
+\def\blu#1{{\color{blu}#1}}
+\definecolor{gre}{rgb}{0,.3,0}
+\def\gre#1{{\color{gre}#1}}
+\definecolor{red}{rgb}{0.5,0.0,0}
+\def\red#1{{\color{red}#1}}
+\def\norm#1{\|#1\|}
+%%% End for Colours
+
+\bracketedpoints
+
+\author{}
+\date{}
+\title{CPSC 320 2024W1: Assignment 1}
+
+\begin{document}
+	
+	\maketitle
+	\vspace{-0.5in} This assignment is due \textbf{Friday, September 20 at 7 PM}. Late submissions will not be accepted. Please follow these guidelines:
+	\begin{itemize}
+		\item Prepare your  solution using \LaTeX and submit  a pdf file. Easiest will be to submit using
+		the .tex file provided. For questions where you  need to select a circle, you can simply
+		change \verb~\fillinMCmath~ to \verb~\fillinMCmathsoln~ .
+		
+		\item Enclose each paragraph of your solution with
+		\verb~\begin{soln}Your solution here...\end{soln}~.
+		\begin{soln}Your  solution will  then appear  in dark  blue\end{soln}, making  it a  lot
+		easier for TAs to find what you wrote.
+		
+		\item   Submit   the    assignment   via   \href{https://gradescope.ca/}{GradeScope}   at
+		\url{https://gradescope.ca}. Invitations to the class Gradescope page will be sent sometime in the week before the assignment deadline. Your group must make  a \textbf{single} submission via one
+		group member's account, marking all other group members in that submission \textbf{using
+			GradeScope's interface}.
+		
+		\item  After uploading  to  Gradescope, link  each  question  with the  page  of your  pdf
+		containing your solution. For instructions on this,
+		see \\ \url{https://canvas.ubc.ca/courses/153809/pages/how-to-submit-assignments-on-gradescope}.
+	\end{itemize}
+	
+	Before we  begin, a few  notes on pseudocode throughout  CPSC 320: Your  pseudocode should
+	communicate your algorithm  clearly, concisely, correctly, and  without irrelevant detail.
+	Reasonable use  of plain  English is  fine in  such pseudocode.  You should  envision your
+	audience as a capable CPSC 320 student unfamiliar with the problem you are solving. You may \textbf{neither} include what we consider to be irrelevant coding details \textbf{nor} assume that  we understand the particular  language you
+	chose. (So, for example,  do not write \texttt{\#include <iostream>} at  the start of your
+	pseudocode,   and    avoid   language-specific   notation   like    C/C++/Java's   ternary
+	(question-mark-colon) operator.)
+	
+	Remember also  to \textbf{justify/explain  your answers}. We  understand that  gauging how
+	much  justification to  provide can  be tricky.  Inevitably, judgment  is applied  by both
+	student and  grader as to how  much is enough, or  too much, and it's  frustrating for all
+	concerned  when judgments  don't align.  Justifications/explanations need  not be  long or
+	formal, but  should be  clear and  specific (referring  back to  lines of  pseudocode, for
+	example). Proofs should be a bit more formal.
+	
+	On the  plus side, if  you choose an  incorrect answer when  selecting an option  but your
+	reasoning shows partial  understanding, you might get more marks  than if no justification
+	is provided. And  the effort you expend  in writing down the  justification will hopefully
+	help you gain deeper  understanding and may well help you converge  to the right selection
+	:).
+	
+	\vspace{.1in}
+	
+	Ok, time to get started...
+	
+	\clearpage
+	
+	\section*{Group Members}
+	
+	Please list the CWLs of all group members here (even if you are submitting by yourself). We will deduct a mark if this is incorrect or missing.
+
+ \section{Statement on collaboration and use of resources}
+To develop good practices in doing homeworks,
+citing resources and acknowledging input from others, please complete the following. To shade a bubble below, replace the LaTeX command \texttt{$\backslash$fillinMCmath} by \texttt{$\backslash$fillinMCmathsoln}.
+This question is worth 2 marks.
+
+\begin{enumerate}
+\item All group members have read and followed the guidelines for groupwork
+on assignments given on the syllabus (see \url{https://canvas.ubc.ca/courses/153809/assignments/syllabus}, under Academic Conduct -> Assignments).
+
+\fillinMCmath{Yes} \hspace{.5in} \fillinMCmath{No}
+
+\item We used the following resources (list books, online sources, etc. that you consulted):
+\item One or more of us consulted with course staff during office hours.
+
+\fillinMCmath{Yes} \hspace{.5in} \fillinMCmath{No}
+
+\item One or more of us collaborated with other CPSC 320 students; none of us took
+      written notes during our consultations and we took at least a half-hour break afterwards.
+
+\fillinMCmath{Yes} \hspace{.5in} \fillinMCmath{No}
+
+      If yes, please list their name(s) here:
+
+
+\item One or more of us collaborated with or consulted others outside of CPSC 320; none of us took written notes during our consultations and we took at least a half-hour break afterwards.
+
+\fillinMCmath{Yes} \hspace{.5in} \fillinMCmath{No}
+
+      If yes, please list their name(s) here:
+
+\end{enumerate}
+
+\clearpage
+
+\section{SMP Extreme True or False}
+Each of the following problems concerns a SMP scenario, and a statement about that scenario. 
+Recall that an instance of size $n$ of the Stable Matching Problem (SMP) has $n$ employers and $n$ applicants, and can be specified using $2n$ preference (or ranking) lists --- one for each employer and one for each applicant. 
+
+Each statement may be \textbf{always} true, \textbf{sometimes} true, or \textbf{never} true. Select the best of these three choices and then:
+	\begin{itemize}
+		\item If the statement is \textbf{always} true, (a) give, and very briefly explain, an example instance in which it is true and (b) prove that it is always true.
+		\item If the statement is \textbf{never} true, (a) give, and very briefly explain, an example instance in which it is false and (b) prove that it is always false.
+		\item If the statement is \textbf{sometimes} true, (a) give, and very briefly explain, an example in which it is true and (b) give and very briefly explain an example instance in which it is false.
+	\end{itemize}
+	Here are the problems:
+
+\begin{questions}
+\question[2]
+  Let $I$ be any instance of SMP in which $a_j$ is the lowest ranked applicant of employer $e_i$. 
+
+\noindent
+    {\bf Statement:} If $e_i$ and $a_j$ are paired in {\em some} stable matching for $I$, then all stable matchings for $I$ must have $e_i$ and $a_j$ paired. [Note: This statement is about {\em all} stable matchings, not just those produced by any specific algorithm such as the Gale-Shapley algorithm.]
+
+    \ifsolutions
+    \input{q2a-sol.tex}
+    \else
+    \fi
+    
+\question[2]
+Let $I$ be an instance of SMP, where the Gale-Shapley algorithm produces a stable matching for $I$ in which all employers AND all applicants get their top-ranked choice. 
+
+\noindent
+{\bf Statement:}  
+If applicant $a_j$ is the top choice of employer $e_i$ in instance $I$, employer $e_i$ is also the top choice of applicant $a_j$ in instance $I$.
+
+\ifsolutions
+\input{q2b-sol.tex}
+\else
+\fi
+\end{questions}
+
+\clearpage
+    
+    \section{Counting Matchings}
+     \begin{questions}
+\question[2]
+How many different SMP instances of size $n$ are there in total? Check one, and provide a short justification of your answer.
+
+\vspace{.1in}
+
+\ifsolutions
+\input{q3a-sol.tex}
+\else
+
+% NOTE: to shade one of these answers, replace the command \fillinMCmath with{} with \fillinMCmathsoln{}
+\begin{tabular}{ll}
+\hspace{1in} \fillinMCmath{} $n \times n!$ \hspace*{1.2in}&  \fillinMCmath{} $(n!)^{n}$ \\
+\hspace{1in} \fillinMCmath{} $2n \times n!$ \hspace*{1.2in}&  \fillinMCmath{} $(n!)^{2n}$
+\end{tabular}
+
+\fi
+
+\vspace{.1in}
+
+\question[2]
+Of the total number of different SMP instances of size $n$, how many are such that $e_i$ is the top choice of $a_i$, and $a_i$ is the top choice of $e_i$, for all $i$ from 1 to $n$? Check one, and provide a short justification of your answer.
+
+\vspace{.1in}
+
+\ifsolutions
+\input{q3b-sol.tex}
+\else
+% NOTE: to shade one of these answers, replace the command \fillinMCmath with{} with \fillinMCmathsoln{}
+\begin{tabular}{ll}
+\hspace{1in} \fillinMCmath{} $(n-1)!$  \hspace*{.8in}&  \fillinMCmath{} $((n-1)!)^{n}$ \\
+\hspace{1in} \fillinMCmath{} $2n \times (n-1)!$ \hspace*{.8in}&  \fillinMCmath{} $((n-1)!)^{2n}$
+\end{tabular}
+
+\fi
+\end{questions}
+
+\clearpage
+
+\section{Tour Planning}
+
+You're organizing a back-to-school social tour for CS students. Because the major is extremely popular, the students will be partitioned into three groups. You want to determine whether there's a {\em good solution}, where no student knows anyone else in their group (other than themselves), so as to maximize the opportunity for people to meet new people. Moreover, each of the three groups should be non-empty, although groups need not be of the same size. We'll call this the TG (Tour Grouping) problem.
+
+You have at your disposal a handy matrix $K[1..n][1..n]$, where $n\ge 3$ is the number of students. Entry $K[i,j]$ is 1 if student $i$ knows student $j$, and is 0 otherwise. The matrix is symmetric, i.e., $K[i,j] = K[j,i]$. (Entry $K[i,i]$ is always 1, for $1 \le i \le n$.)
+
+For example, if the number $n$ of students is eight, and the matrix $K$ is as on the left below, then you can put students 1, 2, and 6 in one group, students 3 and 4 in another group, and 5, 7, and 8 in the third. So for this instance of the problem, the answer is Yes (there is a good solution). However, if all entries in the matrix $K$ are equal to 1, then there clearly is no good solution so the answer is No.
+
+\begin{center}
+\begin{tabular}{lll}
+\begin{tabular}{l|llllllll}
+&     1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\ \hline
+1 &   1 & 0 & 0 & 1 & 1 & 0 & 0 & 0 \\
+2 &   0 & 1 & 1 & 1 & 0 & 0 & 1 & 0 \\
+3 &   0 & 1 & 1 & 0 & 1 & 1 & 1 & 1 \\
+4 &   1 & 1 & 0 & 1 & 0 & 0 & 1 & 1 \\
+5 &   1 & 0 & 1 & 0 & 1 & 0 & 0 & 0 \\
+6 &   0 & 0 & 1 & 0 & 0 & 1 & 1 & 0 \\
+7 &   0 & 1 & 1 & 1 & 0 & 1 & 1 & 0 \\
+8 &   0 & 0 & 1 & 1 & 0 & 0 & 0 & 1
+\end{tabular}
+&
+\hspace{.5in}
+&
+\begin{tabular}{l|llllllll}
+&     1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\ \hline
+1 &   1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 \\
+2 &   1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+3 &   1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\
+4 &   1 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\
+5 &   1 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\
+6 &   1 & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\
+7 &   1 & 0 & 0 & 0 & 0 & 0 & 1 & 0 \\
+8 &   1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\
+\end{tabular}
+\end{tabular}
+\end{center}
+
+Follow the steps below to show how to reduce the TG problem to the SAT problem. That is, given an instance $K[1..n][1..n]$ of the TG problem, construct an instance $I$ of SAT, such that
+instance $K$ is a Yes-instance of TG if and only if $I$ is a Yes-instance of SAT.
+
+Your reduction will have three variables, $x_{i,1}$, $x_{i,2}$, and $x_{i,3}$ for each student $i$. The rough idea is that if there is a satisying assignment to $I$ in which $x_{i,1}$ is true, then student $i$ is in group 1; if $x_{i,2}$ is true, then student $i$ is in group 2; and if $x_{i,3}$ is true, then student $i$ is in group 3.
+
+\begin{questions}
+\question[2]
+  For the example matrix $K$ given above on the right, where again there are eight students, give one good solution to the TG problem.
+
+      \ifsolutions
+      \input{q4a-sol.tex}
+      \fi
+  
+\question[2]
+Now, on to the reduction to SAT. If $K[i,j] = 1$ (student $i$ knows student $j$) then we must ensure that
+group 1 does not contain both student $i$ and student $j$.
+%That is, at least one of $x_{i,1}$ and $x_{j,1}$ is false.
+Give a clause to ensure this.
+
+    \ifsolutions
+    \input{q4b-sol.tex}
+    \fi
+    
+\question[2]
+Similarly, if $K[i,j] = 1$ (student $i$ knows student $j$) then we must ensure
+that group 2 does not contain both students, and group 3 does not contain both students.
+Give clauses to ensure this.
+
+    \ifsolutions
+    \input{q4c-sol.tex}
+    \fi
+    
+\question[2]
+We also don't want student $i$ to be in two groups simultaneously. Give clauses
+to ensure this.
+
+    \ifsolutions
+    \input{q4d-sol.tex}
+    \fi
+
+\question[2]
+We must ensure that each group is non-empty. Give clauses to ensure this.
+
+    \ifsolutions
+    \input{q4e-sol.tex}
+    \fi
+    
+\question[2]
+  Let $c(n)$ be the total number of clauses specified in parts 2 to 5 of this question {\em in the worst case}. (Consider, for example, how many clauses there are when all entries in matrix $K$ are 1.) Choose all that apply. (No justification needed.)
+
+  \vspace{.1in}
+
+    \ifsolutions
+    \input{q4f-sol.tex}
+    \else
+      \begin{tabular}{lllll}
+        \hspace{.5in} \fillinMCmath{} $c(n) = O(n)$ & \hspace{.5in} & \fillinMCmath{} $c(n) = \Theta(n)$ & \hspace{.5in} & \fillinMCmath{} $c(n) = \Omega(n)$ \\
+
+      \hspace{.5in} \fillinMCmath{} $c(n) = O(n^2)$ & \hspace{.5in} & \fillinMCmath{}$c(n) = \Theta(n^2)$ & \hspace{.5in} & \fillinMCmath{}$c(n) = \Omega(n^2)$
+      \end{tabular}
+\fi
+  \vspace{.1in}
+
+\question[2]
+Are any additional constraints needed? If so, describe the constraints and corresponding clauses, and otherwise simply indicate that no further clauses are needed.
+
+    \ifsolutions
+    \input{q4g-sol.tex}
+    \fi
+\question[3]
+Let $I$ be the SAT instance that is the conjunction of all of the clauses from your previous parts (and no other clause). Show that if $K$ is a Yes-instance of TG then $I$ is satisfiable.
+
+    \ifsolutions
+    \input{q4h-sol.tex}
+\fi
+
+\question[3]
+Now show that if $I$ is satisfiable then $K$ is a Yes-instance of TG.
+
+    \ifsolutions
+    \input{q4i-sol.tex}
+    \fi
+    
+\question[4]
+  Finally suppose that we remove the requirement that all groups must be non-empty.
+We'll refer to this variant of the original problem as TG'.
+  Which of the clauses included above can be removed, while still ensuring that the reduction is correct? Remove as many as possible and justify your answer.
+
+  \ifsolutions
+    \input{q4j-sol.tex}
+\fi
+\end{questions}
+
+\clearpage
+
+\section{A Brute Force Approach to Tour Planning}
+Here is pseudocode for a brute force algorithm that either outputs a good solution to the TG problem described above, if one exists, or else outputs "no good solution". The algorithm generates all possible ways to group students into three groups, and checks whether any such grouping is a good solution. This brute force algorithm could use or adapt the subroutine called \textsc{Generate-Groupings} to enumerate all possible ways to put the students into three groups, $G = (G_1,G_2,G_3)$. 
+
+\vspace{.2in}
+
+\begin{algorithmic}[1]
+  \Function{Tour-Planning-Brute-Force}{$n$, $K[1..n][1..n]$}
+\State $\triangleright$ $n \ge 3$ is the number of students
+\State $\triangleright$ entries of $K$ are either 0 or 1, and $K$ is symmetric
+\Statex
+\For{each possible grouping $G= (G_1, G_2,G_3)$ of the students into three groups}
+   \State $\triangleright$ assume that the \textsc{Generate-Groupings} function below is adapted to enumerate the groupings
+    \State check that each of the groups is non-empty
+    \State check that any two people in the same group don't know each other
+    \If{both of these checks pass}
+      \State  {\bf return} the grouping $G$ (and halt) \Comment{this is a good solution}
+      \EndIf
+\EndFor
+\State    {\bf return} "no good solution'
+\EndFunction
+\State
+\Function{Generate-Groupings}{$n$,$G[1..n]$,$i$}
+\If{$i = n+1$}
+    \Return $G[1..n]$
+\Else
+   \State $G[i] \gets 1$; \textsc{Generate-Groupings}($n$,$G[1..n]$,$i+1$)
+   \State $G[i] \gets 2$; \textsc{Generate-Groupings}($n$,$G[1..n]$,$i+1$)
+   \State $G[i] \gets 3$; \textsc{Generate-Groupings}($n$,$G[1..n]$,$i+1$)
+\EndIf
+   \EndFunction
+\end{algorithmic}
+
+\vspace{.2in}
+
+\noindent
+Here, a grouping of the students is represented as an array $G[1..n]$, where each entry $G[i]$ is either 1, 2, or 3, indicating which group student $i$ is in. For example, if $n = 8$ and $G[1..n]$ is [1,1,2,2,3,1,3,3], this represents the grouping discussed in our example above, with students 1, 2, and 6 in the first group, students 3 and 4 in the second, and 5, 7, and 8 in the third.
+When $n=3$, the function call \textsc{Generate-Groupings}(3, $G[1..3], 1)$ outputs the arrays (representing groupings) in the order
+
+\vspace{.1in}
+
+\hspace{.5in} [1,1,1], [1,1,2], [1,1,3], [1,2,1], [1,2,2], [1,2,3], [1,3,1], [1,3,2], [1,3,3], [2,1,1], $\ldots$
+
+\vspace{.1in}
+
+\noindent
+and so on. (The array $G$ need not be initialized for this function call.)  Note that while the groupings output by \textsc{Generate-Groupings} ensure that each student is in exactly one group, some groups may be empty. That is, the groupings might not be a {\em partition} of the students into non-empty groups.  So the brute force algorithm includes a check to ensure that if a good solution is output, all groups are indeed non-empty.
+
+
+\begin{questions}
+\question[2]
+As a function of $n$, how many groupings are generated by the \textsc{Generate-Groupings} algorithm? Briefly explain your answer (one short sentence).
+
+\ifsolutions
+\input{q5a-sol.tex}
+\fi
+
+\question[3]
+Now suppose that we change the ordering of the lines to get an alternative algorithm (which also generates all possible groupings):
+
+\begin{algorithmic}
+\Function{Generate-Groupingss-Modified}{$n$, $G[1..n]$,$i$}
+\If{$i = n+1$}
+    \Return $G[1..n]$
+\Else
+   \State $G[i] \gets 1$; \textsc{Generate-Groupings-Modified}($n$,$G[1..n]$,$i+1$)
+   \State $G[i] \gets 3$; \textsc{Generate-Groupings-Modified}($n$,$G[1..n]$,$i+1$)
+   \State $G[i] \gets 2$; \textsc{Generate-Groupings-Modified}($n$,$G[1..n]$,$i+1$)
+\EndIf
+   \EndFunction
+\end{algorithmic}
+On the call \textsc{Generate-Groupings-Modified}(3,$G[1..3],1)$,
+what is the ordering in which arrays are output?
+Give the first {\bf seven} arrays in the ordering. No justification needed.
+
+\ifsolutions
+\input{q5b-sol.tex}
+\fi
+
+\question[4]
+Write pseudocode to check whether a particular grouping satisfies the second check of the \textsc{Tour-Planning-Brute-Force} function, i.e., that for each group, check that no-one in the group knows anyone else in the group. The algorithm should return "Check fails" if in some group two students know each other, and otherwise should return "Check passes".
+
+\ifsolutions
+\input{q5c-sol.tex}
+\else
+\begin{algorithmic}
+\Function{Check-Who-Knows-Who}{$n$, $G[1..n]$, $K[1..n][1..n]$}
+\State
+\State
+\EndFunction
+\end{algorithmic}
+\fi
+\question[2]
+Give a $\Theta$ bound on the worst case runtime of your algorithm from part 3, and provide a brief justification. 
+
+   \ifsolutions
+    \input{q5d-sol.tex}
+\fi
+\end{questions}
+
+
+\end{document}
+
